@@ -33,7 +33,10 @@ var getCityForecast = function(city) {
             if (response.ok) {
                 response.json().then(function(data) {
                     console.log(data);
-                    displayWeather(data, city);
+                // Allow weather display and empty any current forecast
+                $("#weather-display").css("display", "block")
+                $("#current-weather").empty();
+                    
                 });
             }
 
