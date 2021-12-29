@@ -1,3 +1,6 @@
+// MomentJS date and time
+var dateAndTime = moment().format('MMMM Do YYYY, h:mm a')
+
 // Search button gets user input for city location
 $("#search-btn").on("click", function(event) {
     event.preventDefault();
@@ -22,7 +25,7 @@ localStorage.setItem("city", JSON.stringify());
 
 // Fetch openweather API
 var getCityForecast = function(city) {
-    var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=44671d4dd26dc86b18a7b64bfa869339";
+    var apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=44671d4dd26dc86b18a7b64bfa869339`;
 
     fetch(apiUrl)
         .then(function(response) {
@@ -36,3 +39,4 @@ var getCityForecast = function(city) {
 
         });
 }
+
