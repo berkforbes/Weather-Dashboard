@@ -36,7 +36,14 @@ var getCityForecast = function(city) {
                 // Allow weather display and empty any current forecast
                 $("#weather-display").css("display", "block")
                 $("#current-weather").empty();
-                    
+                
+                // var for openweather icon
+                var weatherIcon = data.weather[0].icon;
+                var weatherIconURL = `https://openweathermap.org/img/wn/${weatherIcon}.png`;
+
+                // Display forecast and current city info
+                var cityForecast = $(`<h2 id="city-forecast"> ${data.name} ${dateAndTime} <img src="${weatherIconURL}" alt="${data.weather[0].description}" /> </h2>`);
+                $("#current-weather").append(cityForecast) 
                 });
             }
 
