@@ -12,3 +12,7 @@
 #form-control {
     margin-left: 2px;
 }
+
+#weather-display {
+    display: none;
+}
