@@ -6,7 +6,7 @@ $("#search-btn").on("click", function(event) {
     event.preventDefault();
 
     var citySearch = $("#city-search").val().trim();
-    console.log(citySearch)
+    
 
     if (citySearch) {
         getCityForecast(citySearch);
@@ -25,28 +25,52 @@ localStorage.setItem("city", JSON.stringify());
 
 // Fetch openweather API
 var getCityForecast = function(city) {
-    var apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=44671d4dd26dc86b18a7b64bfa869339`;
+    var weatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=44671d4dd26dc86b18a7b64bfa869339`;
+    
 
-    fetch(apiUrl)
+    fetch(weatherApiUrl)
         .then(function(response) {
             // request was succesful
             if (response.ok) {
-                response.json().then(function(data) {
-                    console.log(data);
+                response.json().then(function(userCity) {
+                    console.log(userCity);
                 // Allow weather display and empty any current forecast
                 $("#weather-display").css("display", "block")
                 $("#current-weather").empty();
                 
                 // var for openweather icon
-                var weatherIcon = data.weather[0].icon;
+                var weatherIcon = userCity.weather[0].icon;
                 var weatherIconURL = `https://openweathermap.org/img/wn/${weatherIcon}.png`;
 
-                // Display forecast and current city info
-                var cityForecast = $(`<h2 id="city-forecast"> ${data.name} ${dateAndTime} <img src="${weatherIconURL}" alt="${data.weather[0].description}" /> </h2>`);
+                // Display forecast and current city info w icon then temp, humidity, wind, UVI
+                var cityForecast = $(`<h2 id="current-weather">  ${userCity.name} ${dateAndTime} <img src="${weatherIconURL}" alt="${userCity.weather[0].description}" /></h2>
+                
+                <h3>Temperature: ${userCity.main.temp}</h3>
+                <h3>Humidity: ${userCity.main.humidity}</h3>
+                <h3>Wind Speed: ${userCity.main.current.wind_speed}</h3>
+                <h3>UV Index: </h3>
+
+                `);
+
                 $("#current-weather").append(cityForecast) 
-                });
-            }
+                
+                var lat = userCity.coord.lat;
+                var lon = userCity.coord.lon;
+                var UVIApi = `https://api.openweathermap.org/data/2.5/onecall{current.uvi}?lat=${lat}&lon=${lon}&exclude=hourly,daily&appid=44671d4dd26dc86b18a7b64bfa869339`
 
+                fetch(UVIApi)
+                .then(function(response) {
+                // request was succesful
+                if (response.ok) {
+                response.json().then(function(uviData) {
+                console.log(uviData);
+
+                    });
+                   
+                }
+
+            })   
         });
+    }
+})
 }
-
