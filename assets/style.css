@@ -16,3 +16,8 @@
 #weather-display {
     display: none;
 }
+
+#uv-status-color {
+    color: #4D4F53!important;
+    color: violet;
+}

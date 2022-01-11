@@ -35,7 +35,7 @@ var getCityForecast = function (citySearch) {
         console.log(citySearch);
 
         // Call function to get uvindex
-        getUvIndex(citySearch.coord.lat, citySearch.coord.lon)
+        fiveDayAndUVI(citySearch.coord.lat, citySearch.coord.lon)
 
         // Allow weather display and empty any current forecast
         $("#weather-display").css("display", "block");
@@ -59,11 +59,11 @@ var getCityForecast = function (citySearch) {
 
       });
 
-      var getUvIndex = function(lat, lon) {
-      var apikey = "44671d4dd26dc86b18a7b64bfa869339";
-      var UVIApi = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely,hourly&appid=44671d4dd26dc86b18a7b64bfa869339`;
+      var fiveDayAndUVI = function(lat, lon) {
 
-      fetch(UVIApi).then(function (response) {
+      var fiveDayAPI = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely,hourly&appid=44671d4dd26dc86b18a7b64bfa869339`;
+
+      fetch(fiveDayAPI).then(function (response) {
         // request was succesful
         if (response.ok) {
           response.json().then(function (uviData) {
@@ -71,12 +71,58 @@ var getCityForecast = function (citySearch) {
             
             var {uvi} = uviData.current;
             var uv = document.querySelector("#uv-index")
-            uv.innerHTML = `<h3 id="uv-index">UV Index: ${uvi}</h3>`;
-            
-          });
+            uv.innerHTML = `<h3 id="uv-index uv-status-color" class="px-2 py-2">UV Index: ${uvi}</h3>`;
+            console.log({uvi})
+
+          // UV will change background color based on result; green, orange, violet
+          if ({uvi} >= 0 && {uvi} <= 3) {
+              $("#uv-status-color").css("background-color", "green").css("color", "white");
+          } else if ({uvi} >= 3.1 && {uvi} <= 7) {
+              $("#uv-status-color").css("background-color", "orange");
+          } else {
+              $("#uv-status-color").css("background-color", "violet").css("color", "white"); 
+          };
+
+                    // loop for 5-day forecast
+                    for (let i = 1; i < 6; i++) {
+                      var cityDetails = {
+                        date: uviData.daily[i].dt,
+                        icon: uviData.daily[i].weather[0].icon,
+                        temp: uviData.daily[i].temp.day,
+                        humidity: uviData.daily[i].humidity
+                      };
+          
+                      var currently = moment.unix(cityDetails.date).format("MM/DD/YYYY");
+                      var weatherIconURL = `<img src="https://openweathermap.org/img/w/${cityDetails.icon}.png" alt="${uviData.daily[i].weather[0].main}" />`;
+          
+                    // display date, weather icon, temp, and humidity
+                      var futureDisplay = $(`
+                      <div class="pl-3">
+                              <div class="card pl-3 pt-3 mb-3 bg-primary text-light" style="width: 12rem;>
+                                  <div class="card-body">
+                                      <h5>${currently}</h5>
+                                      <p>${weatherIconURL}</p>
+                                      <p>Temperature: ${cityDetails.temp} °F</p>
+                                      <p>Humidity: ${cityDetails.humidity}\%</p>
+                                  </div>
+                              </div>
+                          <div>
+                      `);
+          
+                      $("#5day-forecast").append(futureDisplay);
+
+          };
+          })
+
         }
-      });
-    }
-    }
-  });
-};
+          })
+            
+          }
+        }
+      })
+        }
+      ;
+    
+  
+  ;
+;
