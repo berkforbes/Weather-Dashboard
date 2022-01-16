@@ -75,7 +75,7 @@ var getCityForecast = function (citySearch) {
         // display date, weather icon, temp, and humidity
           var fiveDayDisplay = $(`
             <div class="pl-3">
-               <div class="card pl-3 pt-3 mb-3 bg-primary text-light text-center" style="width: 12rem;>
+               <div class="card pl-3 pt-3 mb-3 bg-primary text-light border border-2 border-dark text-center" style="width: 12rem;>
                 <div class="card-body">
                   <h4>${currently}</h4>
                   <h4>${weatherIconURL}</h4>
@@ -123,7 +123,7 @@ $("#search-btn").on("click", function (event) {
 });
 
 // Clicking on saved searches will update forecasts, current and 5day
-$(document).on('click', "city-list", function() {
+$(document).on('click', ".city-list", function() {
   var savedCity = $(this).text();
   getCityForecast(savedCity)
 });

@@ -9,19 +9,36 @@
     letter-spacing: 2px;
 }
 
+#get-forecast {
+    font-weight: 300;
+    color: white;
+}
+
+#previous-searches,
+#current-weather, 
+#weather-display {
+   background-color: rgb(133, 130, 130)!important;
+}
+
 #form-control {
     margin-left: 2px;
+}
+
+#current-weather {
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
 #weather-display {
     display: none;
 }
 
-#uv-status-color {
-    color: #4D4F53!important;
-    color: violet;
-}
-
 #fiveDay-forecast .card {
     border: 1.5px solid rgb(7, 7, 7);
 }
+
+.city-list {
+    font-size: 25px;
+    cursor: pointer;
+}
+
