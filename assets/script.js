@@ -1,28 +1,6 @@
 // MomentJS date and time
 var dateAndTime = moment().format("MMMM Do YYYY, h:mm a");
-
-// Search button gets user input for city location
-$("#search-btn").on("click", function (event) {
-  let citySearchHistory = [];
-  let citySearches = JSON.parse(localStorage.getItem('city'));
-  citySearchHistory = citySearches
-
-  event.preventDefault();
-
-  var citySearch = $("#city-search").val().trim();
-  citySearchHistory.push(citySearch)
-  if (citySearch) {
-    getCityForecast(citySearch);
-
-    //Clear search
-    $("#city-search").val("");
-  } else {
-    //alert if invalid or empty search
-    alert("Please Enter a Valid City or Zipcode");
-  }
-  // Store city search to local storage
-  localStorage.setItem("city", JSON.stringify(citySearchHistory));
-});
+var citySearchHistory = [];
 
 // Fetch openweather API -- Gets called upon button click
 var getCityForecast = function (citySearch) {
@@ -67,11 +45,10 @@ var getCityForecast = function (citySearch) {
         // request was succesful
         if (response.ok) {
           response.json().then(function (uviData) {
-            console.log(uviData)
             
             var {uvi} = uviData.current;
             var uv = document.querySelector("#uv-index")
-            uv.innerHTML = `<h3 id="uv-index uv-status-color" class="px-2 py-2">UV Index: ${uvi}</h3>`;
+            uv.innerHTML = `<h3 id="uv-index uv-status-color" class="px-2 ">UV Index: ${uvi}</h3>`;
             console.log({uvi})
 
           // UV will change background color based on result; green, orange, violet
@@ -83,46 +60,82 @@ var getCityForecast = function (citySearch) {
               $("#uv-status-color").css("background-color", "violet").css("color", "white"); 
           };
 
-                    // loop for 5-day forecast
-                    for (let i = 1; i < 6; i++) {
-                      var cityDetails = {
-                        date: uviData.daily[i].dt,
-                        icon: uviData.daily[i].weather[0].icon,
-                        temp: uviData.daily[i].temp.day,
-                        humidity: uviData.daily[i].humidity
-                      };
+        // loop for 5-day forecast
+          for (let i = 0; i < 5; i++) {
+            var cityDetails = {
+            date: uviData.daily[i].dt,
+            icon: uviData.daily[i].weather[0].icon,
+            temp: uviData.daily[i].temp.day,
+            humidity: uviData.daily[i].humidity
+            };
           
-                      var currently = moment.unix(cityDetails.date).format("MM/DD/YYYY");
-                      var weatherIconURL = `<img src="https://openweathermap.org/img/w/${cityDetails.icon}.png" alt="${uviData.daily[i].weather[0].main}" />`;
+          var currently = moment.unix(cityDetails.date).format("MM/DD/YYYY");
+          var weatherIconURL = `<img src="https://openweathermap.org/img/w/${cityDetails.icon}.png" alt="${uviData.daily[i].weather[0].main}" />`;
           
-                    // display date, weather icon, temp, and humidity
-                      var futureDisplay = $(`
-                      <div class="pl-3">
-                              <div class="card pl-3 pt-3 mb-3 bg-primary text-light" style="width: 12rem;>
-                                  <div class="card-body">
-                                      <h5>${currently}</h5>
-                                      <p>${weatherIconURL}</p>
-                                      <p>Temperature: ${cityDetails.temp} °F</p>
-                                      <p>Humidity: ${cityDetails.humidity}\%</p>
-                                  </div>
-                              </div>
-                          <div>
-                      `);
-          
-                      $("#5day-forecast").append(futureDisplay);
+        // display date, weather icon, temp, and humidity
+          var fiveDayDisplay = $(`
+            <div class="pl-3">
+               <div class="card pl-3 pt-3 mb-3 bg-primary text-light text-center" style="width: 12rem;>
+                <div class="card-body">
+                  <h4>${currently}</h4>
+                  <h4>${weatherIconURL}</h4>
+                  <h6>Temperature: ${cityDetails.temp} °F</h6>
+                  <h6>Humidity: ${cityDetails.humidity}\%</h6>
+                </div>
+              </div>
+            <div>
+              `);
 
+          $("#fiveDay-forecast").append(fiveDayDisplay);
+              };
+            });
           };
-          })
+        });         
+      };
+    };
+  });
+}
 
-        }
-          })
-            
-          }
-        }
-      })
-        }
-      ;
-    
+// Search button gets user input for city location
+$("#search-btn").on("click", function (event) {
+  event.preventDefault();
+
+  let citySearches = JSON.parse(localStorage.getItem('city'));
+  citySearchHistory = citySearches
+
+  var citySearch = $("#city-search").val().trim();
   
-  ;
-;
+
+  if (citySearch) {
+    getCityForecast(citySearch);
+    //Clear search
+    $("#city-search").val("");
+    citySearchHistory.push(citySearch)
+    var currentCitySearch = $(` <li class="city-list">${citySearch}</li>`)
+    $('#search-history').append(currentCitySearch);
+  } 
+  else {
+    //alert if invalid or empty search
+    alert("Please Enter a Valid City or Zipcode");
+  }
+  // Store city search to local storage
+  localStorage.setItem("city", JSON.stringify(citySearchHistory));
+});
+
+// Clicking on saved searches will update forecasts, current and 5day
+$(document).on('click', "city-list", function() {
+  var savedCity = $(this).text();
+  getCityForecast(savedCity)
+});
+
+// Most recent search will populate on refresh
+$(document).ready(function(){
+  citySearchHistory = JSON.parse(localStorage.getItem('city'));
+
+  if (citySearchHistory !== null) {
+    var previousSearchIndex = citySearchHistory.length -1;
+    var previouslySearchedCity = citySearchHistory[previousSearchIndex];
+    getCityForecast(previouslySearchedCity);
+  }
+})
+

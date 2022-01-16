@@ -21,3 +21,7 @@
     color: #4D4F53!important;
     color: violet;
 }
+
+#fiveDay-forecast .card {
+    border: 1.5px solid rgb(7, 7, 7);
+}
