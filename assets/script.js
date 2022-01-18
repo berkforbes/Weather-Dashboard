@@ -48,17 +48,20 @@ var getCityForecast = function (citySearch) {
             
             var {uvi} = uviData.current;
             var uv = document.querySelector("#uv-index")
-            uv.innerHTML = `<h3 id="uv-index uv-status-color" class="px-2 ">UV Index: ${uvi}</h3>`;
-            console.log({uvi})
+            uv.innerHTML = `<h3 id="uv-index" class="px-2 ">UV Index: ${uvi}</h3>`;
+            console.log(uvi)
 
           // UV will change background color based on result; green, orange, violet
-          if ({uvi} >= 0 && {uvi} <= 3) {
-              $("#uv-status-color").css("background-color", "green").css("color", "white");
-          } else if ({uvi} >= 3.1 && {uvi} <= 7) {
-              $("#uv-status-color").css("background-color", "orange");
+          if (uvi >= 0 && uvi <= 3) {
+              $("#uv-index").css("background-color", "green").css("color", "white");
+          } else if (uvi >= 3.1 && uvi <= 7) {
+              $("#uv-index").css("background-color", "orange");
           } else {
-              $("#uv-status-color").css("background-color", "violet").css("color", "white"); 
+              $("#uv-index").css("background-color", "violet").css("color", "white"); 
           };
+
+          //
+          $("#fiveDay-forecast").html("")
 
         // loop for 5-day forecast
           for (let i = 0; i < 5; i++) {
@@ -85,7 +88,7 @@ var getCityForecast = function (citySearch) {
               </div>
             <div>
               `);
-
+            
           $("#fiveDay-forecast").append(fiveDayDisplay);
               };
             });
@@ -138,4 +141,19 @@ $(document).ready(function(){
     getCityForecast(previouslySearchedCity);
   }
 })
+
+
+
+// Execute a function when the user releases a key on the keyboard
+$("#city-search").on("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    // document.getElementById("myBtn").click();
+
+    $("#search-btn").click()
+  }
+});
 
