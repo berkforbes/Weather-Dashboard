@@ -70,7 +70,8 @@ var getCityForecast = function (citySearch) {
             date: uviData.daily[i].dt,
             icon: uviData.daily[i].weather[0].icon,
             temp: uviData.daily[i].temp.day,
-            humidity: uviData.daily[i].humidity
+            humidity: uviData.daily[i].humidity,
+            wind: uviData.daily[i].wind_speed
             };
           
           var currently = moment.unix(cityDetails.date).format("MM/DD/YYYY");
@@ -85,6 +86,7 @@ var getCityForecast = function (citySearch) {
                   <h4>${weatherIconURL}</h4>
                   <h6>Temperature: ${cityDetails.temp} °F</h6>
                   <h6>Humidity: ${cityDetails.humidity}\%</h6>
+                  <h6>Wind Speed: ${cityDetails.wind}</h6>
                 </div>
               </div>
             <div>
