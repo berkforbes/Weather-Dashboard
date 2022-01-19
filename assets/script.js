@@ -1,6 +1,6 @@
 // MomentJS date and time
-var dateAndTime = moment().format("MMMM Do YYYY, h:mm a");
-var citySearchHistory = [];
+const dateAndTime = moment().format("MMMM Do YYYY");
+
 
 // Fetch openweather API -- Gets called upon button click
 var getCityForecast = function (citySearch) {
@@ -25,7 +25,8 @@ var getCityForecast = function (citySearch) {
 
         // Display forecast and current city info w icon then temp, humidity, wind, UVI
         var cityForecast =
-          $(`<h2 id="current-weather">  ${citySearch.name} ${dateAndTime} <img src="${weatherIconURL}" alt="${citySearch.weather[0].description}" /></h2>
+          $(`<h2 id="current-weather class="current-cityDisplay">  ${citySearch.name} 
+          <br>${dateAndTime}</br> <img src="${weatherIconURL}" alt="${citySearch.weather[0].description}" /></h2>
                 
                 <h3>Temperature: ${citySearch.main.temp}</h3>
                 <h3>Humidity: ${citySearch.main.humidity}</h3>
@@ -48,7 +49,7 @@ var getCityForecast = function (citySearch) {
             
             var {uvi} = uviData.current;
             var uv = document.querySelector("#uv-index")
-            uv.innerHTML = `<h3 id="uv-index" class="px-2 ">UV Index: ${uvi}</h3>`;
+            uv.innerHTML = `<h3 id="uv-index" class="px-2 py-2 rounded">UV Index: ${uvi}</h3>`;
             console.log(uvi)
 
           // UV will change background color based on result; green, orange, violet
@@ -60,7 +61,7 @@ var getCityForecast = function (citySearch) {
               $("#uv-index").css("background-color", "violet").css("color", "white"); 
           };
 
-          //
+          // Clear 5day forecast with new search
           $("#fiveDay-forecast").html("")
 
         // loop for 5-day forecast
@@ -78,7 +79,7 @@ var getCityForecast = function (citySearch) {
         // display date, weather icon, temp, and humidity
           var fiveDayDisplay = $(`
             <div class="pl-3">
-               <div class="card pl-3 pt-3 mb-3 bg-primary text-light border border-2 border-dark text-center" style="width: 12rem;>
+               <div class="card pl-3 pt-3 mb-5 bg-primary text-light border border-2 border-dark text-center" style="width: 12rem;>
                 <div class="card-body">
                   <h4>${currently}</h4>
                   <h4>${weatherIconURL}</h4>
@@ -102,12 +103,10 @@ var getCityForecast = function (citySearch) {
 // Search button gets user input for city location
 $("#search-btn").on("click", function (event) {
   event.preventDefault();
+  var citySearchHistory = [];
 
-  let citySearches = JSON.parse(localStorage.getItem('city'));
-  citySearchHistory = citySearches
-
+  // City-search input value has any extra spaces trimmed and saved as var
   var citySearch = $("#city-search").val().trim();
-  
 
   if (citySearch) {
     getCityForecast(citySearch);
@@ -119,7 +118,7 @@ $("#search-btn").on("click", function (event) {
   } 
   else {
     //alert if invalid or empty search
-    alert("Please Enter a Valid City or Zipcode");
+    alert("Please Enter a Valid City");
   }
   // Store city search to local storage
   localStorage.setItem("city", JSON.stringify(citySearchHistory));
@@ -140,6 +139,9 @@ $(document).ready(function(){
     var previouslySearchedCity = citySearchHistory[previousSearchIndex];
     getCityForecast(previouslySearchedCity);
   }
+
+  let citySearches = JSON.parse(localStorage.getItem('city'));
+  citySearchHistory = citySearches
 })
 
 
@@ -151,8 +153,6 @@ $("#city-search").on("keyup", function(event) {
     // Cancel the default action, if needed
     event.preventDefault();
     // Trigger the button element with a click
-    // document.getElementById("myBtn").click();
-
     $("#search-btn").click()
   }
 });

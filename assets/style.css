@@ -25,8 +25,16 @@
 }
 
 #current-weather {
-    font-weight: 800;
     letter-spacing: 1px;
+}
+
+.current-cityDisplay {
+    letter-spacing: .5px;
+}
+
+#uv-index {
+    width: fit-content;
+    border-radius: 4px;
 }
 
 #weather-display {
@@ -36,6 +44,7 @@
 #fiveDay-forecast .card {
     border: 1.5px solid rgb(7, 7, 7);
     margin-right: 10px;
+    
 }
 
 .city-list {
@@ -47,3 +56,4 @@
     display: flex;
     flex-wrap: wrap;
 }
+
